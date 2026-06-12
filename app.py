@@ -29,6 +29,21 @@ def extract_urls_from_csv(file):
         urls += df[col].dropna().astype(str).tolist()
     return urls
 
+def format_status(code):
+    if code == 200:
+        return"🟢 Working (200)"
+    elif code in[301, 302]:
+        return f"🟡 Redirect ({code})"
+    elif code == 404:
+        return "🔴 Broken (404)"
+    elif code >= 500:
+        return f"🔴 Server Error ({code})"
+    else:
+        return f"⚪ Unknown ({code})"
+        
+
+
+
 # -----------------------
 # Inputs
 # -----------------------
@@ -93,7 +108,7 @@ if st.button("Check URLs"):
 
                 results.append({
                     "URL": url,
-                    "Status": r.status_code,
+                    "Status": format_status(r.status_code),
                     "Response Time (ms)": duration,
                     "Final URL": r.url
                 })
